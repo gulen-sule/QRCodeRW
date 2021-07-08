@@ -46,7 +46,7 @@ class QRCodeGeneratorFragment : Fragment() {
     private fun generateQr(content: String) {
 
         val writer = QRCodeWriter()
-        val bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, 512, 512)
+        val bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, 1024, 1024)
         val width = bitMatrix.width
         val height = bitMatrix.height
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
