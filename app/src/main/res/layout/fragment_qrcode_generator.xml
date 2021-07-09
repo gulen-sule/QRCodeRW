@@ -4,44 +4,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:theme="@style/Theme.ScannerFragment"
     tools:context=".ui.generator.QRCodeGeneratorFragment">
-
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:hint="code to generate "
-        android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="32dp"
-        android:src="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:src="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/contentLoadingProgressBar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/generate" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/generate"
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/contentLoadingProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:text="Generate"
-        android:textSize="12sp"
+        android:layout_marginBottom="24dp"
+        android:max="100"
+        android:progress="80"
+        android:scrollbarStyle="insideInset"
+        app:indicatorColor="#8DFFFFFF"
+        app:indicatorDirectionCircular="counterclockwise"
+        app:indicatorInset="10dp"
+        app:indicatorSize="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:trackColor="#018786"
+        app:trackThickness="30dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

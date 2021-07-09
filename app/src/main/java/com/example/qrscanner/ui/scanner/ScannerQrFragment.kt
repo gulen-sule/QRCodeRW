@@ -6,6 +6,7 @@ import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
@@ -25,26 +26,36 @@ class ScannerQrFragment : Fragment() {
     private lateinit var executorService: ExecutorService
     private lateinit var imageAnalysis: ImageAnalysis
     private var _binding: FragmentScannerBinding? = null
-
+    private var time: Long = 0L
     private val binding get() = _binding!!
+    private var dialog = ScannerDialogFragment {
+        dialogClosed = true
+    }
+
+    private var dialogClosed = true
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        dialog.onCreateView(inflater, container, savedInstanceState)
         _binding = FragmentScannerBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //dialog.onViewCreated(view, savedInstanceState)
+        time = System.currentTimeMillis()
         runScanner()
     }
+
     private fun runScanner() {
 
         setImageAnalysis()
-        bindCameraUseCases()
+        if (dialogClosed)
+            bindCameraUseCases()
     }
 
     private fun setImageAnalysis() {
@@ -86,8 +97,6 @@ class ScannerQrFragment : Fragment() {
         image.image.let { thisImage ->
             val inputImage = InputImage.fromMediaImage(thisImage!!, image.imageInfo.rotationDegrees)
 
-
-            //[START run_detector]
             scanner.process(inputImage).addOnSuccessListener { barcodes ->
                 // [START get_barcodes]
                 for (barcode in barcodes) {
@@ -98,10 +107,9 @@ class ScannerQrFragment : Fragment() {
                     Log.d("ValueTypeTAG", valueType.toString())
                     when (valueType) {
                         Barcode.TYPE_URL -> {
-                          //  val title = barcode.url!!.title
+                            //  val title = barcode.url!!.title
                             val url = barcode.url!!.url
-                            binding.textDashboard.text = url
-                            Log.d("UrlTAG", url + "what")
+
                         }
                         Barcode.TYPE_WIFI -> {
                             val ssid = barcode.wifi!!.ssid
@@ -111,11 +119,16 @@ class ScannerQrFragment : Fragment() {
                         Barcode.TYPE_UNKNOWN -> {
                             Log.e("DashBoardFragmentTAG", "Unkown type of QR code")
                         }
-                        Barcode.TYPE_TEXT->{
-                            binding.textDashboard.text= barcode.displayValue
+                        Barcode.TYPE_TEXT -> {
+                            if (dialogClosed) {
+                                dialog.arguments = Bundle().apply {
+                                    putString("token", barcode.rawValue.toString())
+                                }
+                                dialog.show(requireActivity().supportFragmentManager, "scanner_dialog_fragment")
+                                dialogClosed = false
+                            }
                         }
                     }
-                    binding.textDashboard.visibility=View.VISIBLE
                 }
 
             }.addOnFailureListener { }.addOnCompleteListener {

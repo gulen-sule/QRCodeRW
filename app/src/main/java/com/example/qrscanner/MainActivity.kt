@@ -1,11 +1,7 @@
 package com.example.qrscanner
 
-import android.os.Build
 import android.os.Bundle
-import android.util.Rational
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.camera.core.*
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -23,28 +19,21 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val navView: BottomNavigationView = binding.navView
+    }
+
+    private fun setBottomNavigation() {
+        val navView: BottomNavigationView?=null// = binding.navView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_home, R.id.navigation_scanner, R.id.navigation_generator
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
-
-
+        navView?.setupWithNavController(navController)
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    private fun setUseCaseGroup() {
-        val width: Int = 360
-        val viewPort = display?.let { ViewPort.Builder(Rational(width, width), it.rotation).build() }
-
-
-    }
 
 }

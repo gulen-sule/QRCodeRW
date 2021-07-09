@@ -9,17 +9,32 @@
         android:id="@+id/navigation_home"
         android:name="com.example.qrscanner.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_generator"
+            app:destination="@id/navigation_generator" />
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_scanner"
+            app:destination="@id/navigation_scanner" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_scanner"
         android:name="com.example.qrscanner.ui.scanner.ScannerQrFragment"
         android:label="@string/title_scanner"
-        tools:layout="@layout/fragment_scanner" />
+        tools:layout="@layout/fragment_scanner" >
+        <action
+            android:id="@+id/action_navigation_scanner_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_generator"
         android:name="com.example.qrscanner.ui.generator.QRCodeGeneratorFragment"
         android:label="@string/title_generator"
-        tools:layout="@layout/fragment_qrcode_generator" />
+        tools:layout="@layout/fragment_qrcode_generator" >
+        <action
+            android:id="@+id/action_navigation_generator_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
 </navigation>
