@@ -1,4 +1,4 @@
-package com.example.qrscanner.ui.scanner
+package com.example.qrscanner.ui.admin.scanner
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -28,5 +28,6 @@ class ScannerDialogFragment(val onClicked: () -> Unit) : DialogFragment() {
             onClicked()
             dismiss()
         }
+
     }
 }

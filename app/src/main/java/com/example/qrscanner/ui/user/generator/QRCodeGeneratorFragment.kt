@@ -1,7 +1,10 @@
-package com.example.qrscanner.ui.generator
+package com.example.qrscanner.ui.user.generator
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Matrix
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
@@ -9,16 +12,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
+import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
-import com.example.qrscanner.data.ProfileModel
+import com.example.qrscanner.R
+import com.example.qrscanner.data.ResponseModel
 import com.example.qrscanner.databinding.FragmentQrcodeGeneratorBinding
-import com.example.qrscanner.ui.scanner.ScannerDialogFragment
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.util.*
 
 class QRCodeGeneratorFragment : Fragment() {
@@ -28,7 +28,7 @@ class QRCodeGeneratorFragment : Fragment() {
     private val bitMatrixWidth = 600
     private val bitMatrixHeight = 600
     private val binding get() = _binding!!
-    var profile: ProfileModel? = null
+    var profile: ResponseModel? = null
     var bitmap: Bitmap? = null
 
     override fun onCreateView(
@@ -83,22 +83,39 @@ class QRCodeGeneratorFragment : Fragment() {
         }
     }
 
-    private fun getResponse(): ProfileModel {
+    private fun getResponse(): ResponseModel {
         val token = UUID.randomUUID().toString() + UUID.randomUUID().toString().substring(0, 4)
         Log.e("tokenTAG", token)
-        return ProfileModel(token = token, time = 10)
+        return ResponseModel(token = token, time = 10)
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private fun generateQr(content: String): Bitmap? {
         val writer = QRCodeWriter()
         val bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, bitMatrixWidth, bitMatrixHeight)
-        val bitmap = Bitmap.createBitmap(bitMatrixWidth, bitMatrixHeight, Bitmap.Config.RGB_565)
+        val draw = requireContext().getDrawable(R.drawable.background_generator)
+        draw?.toBitmap(bitMatrixWidth, bitMatrixHeight, Bitmap.Config.RGB_565)
+        val bitmap = draw?.toBitmap(bitMatrixWidth, bitMatrixHeight, Bitmap.Config.RGB_565)
+        // Bitmap.createBitmap(bitMatrixWidth, bitMatrixHeight, Bitmap.Config.RGB_565)
         for (x in 0 until bitMatrixWidth) {
             for (y in 0 until bitMatrixHeight) {
-                bitmap.setPixel(x, y, if (bitMatrix.get(x, y)) Color.BLACK else Color.WHITE)
+                if (bitMatrix.get(x, y))
+                bitmap?.setPixel(x, y, Color.BLACK )
             }
         }
         return bitmap
+    }
+
+    //to add an image to the center
+    fun Bitmap.addOverlayToCenter(overlayBitmap: Bitmap): Bitmap {
+        val bitmap2Width = overlayBitmap.width
+        val bitmap2Height = overlayBitmap.height
+        val marginLeft = (this.width * 0.5 - bitmap2Width * 0.5).toFloat()
+        val marginTop = (this.height * 0.5 - bitmap2Height * 0.5).toFloat()
+        val canvas = Canvas(this)
+        canvas.drawBitmap(this, Matrix(), null)
+        canvas.drawBitmap(overlayBitmap, marginLeft, marginTop, null)
+        return this
     }
 
     override fun onStop() {

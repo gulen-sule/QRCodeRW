@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/controller"
+    app:startDestination="@id/scannerQrFragment">
+    <fragment
+        android:id="@+id/scannerQrFragment"
+        android:name="com.example.qrscanner.ui.admin.scanner.ScannerQrFragment"
+        android:label="fragment_scanner"
+        tools:layout="@layout/fragment_scanner" >
+        <action
+            android:id="@+id/action_scannerQrFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.qrscanner.ui.admin.profile.ProfileFragment"
+        android:label="ProfileFragment" >
+        <action
+            android:id="@+id/action_profileFragment_to_photoFragment"
+            app:destination="@id/photoFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_scannerQrFragment"
+            app:destination="@id/scannerQrFragment" />
+        <argument
+            android:name="profileData"
+            app:argType="com.example.qrscanner.data.api.models.profile.ProfileModel"
+            app:nullable="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/photoFragment"
+        android:name="com.example.qrscanner.ui.admin.photo.PhotoFragment"
+        android:label="PhotoFragment"
+        tools:layout="@layout/fragment_photo">
+        <action
+            android:id="@+id/action_photoFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <argument
+            android:name="photoPathData"
+            app:argType="com.example.qrscanner.data.api.models.profile.ProfileModel"
+            app:nullable="true" />
+    </fragment>
+</navigation>
