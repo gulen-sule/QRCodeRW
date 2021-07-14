@@ -1,9 +1,13 @@
 package com.example.qrscanner.ui.home
 
+import android.Manifest
 import android.app.StatusBarManager
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.example.qrscanner.databinding.ActivityHomeBinding
 import com.example.qrscanner.ui.admin.AdminActivity
 import com.example.qrscanner.ui.user.UserActivity
@@ -27,8 +31,9 @@ class HomeActivity : AppCompatActivity() {
     private fun setActions() {
         val context =baseContext
         binding.buttonController.setOnClickListener {
-            val intent = Intent(this, AdminActivity::class.java)
-            startActivity(intent)
+                val intent = Intent(this, AdminActivity::class.java)
+                startActivity(intent)
+
         }
         binding.buttonUser.setOnClickListener {
             val intent = Intent(this, UserActivity::class.java)

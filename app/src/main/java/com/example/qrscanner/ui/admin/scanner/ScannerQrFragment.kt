@@ -1,21 +1,28 @@
 package com.example.qrscanner.ui.admin.scanner
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
+import android.content.res.Resources
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.util.Size
-import android.view.*
-import androidx.camera.core.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageAnalysis
+import androidx.camera.core.ImageProxy
+import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.*
 import androidx.navigation.fragment.findNavController
 import com.example.qrscanner.R
 import com.example.qrscanner.data.api.models.profile.ProfileModel
 import com.example.qrscanner.databinding.FragmentScannerBinding
-import com.example.qrscanner.ui.admin.profile.ProfileFragment
 import com.google.mlkit.vision.barcode.Barcode
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
@@ -38,6 +45,11 @@ class ScannerQrFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentScannerBinding.inflate(inflater, container, false)
+        if(ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(arrayOf(Manifest.permission.CAMERA), PackageManager.PERMISSION_GRANTED)
+            }
+        }
         return binding.root
 
     }
@@ -57,8 +69,10 @@ class ScannerQrFragment : Fragment() {
 
     private fun setImageAnalysis() {
         executorService = Executors.newSingleThreadExecutor()
+        val width = Resources.getSystem().displayMetrics.widthPixels
+        val height = Resources.getSystem().displayMetrics.heightPixels
         imageAnalysis = ImageAnalysis.Builder()
-            .setTargetResolution(Size(720, 720))
+            .setTargetResolution(Size(width, height))
             .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST).build()
 
         imageAnalysis.setAnalyzer(executorService, {
@@ -113,7 +127,6 @@ class ScannerQrFragment : Fragment() {
                                 val action = ScannerQrFragmentDirections.actionScannerQrFragmentToProfileFragment(profile)
                                 findNavController().navigate(action)
                             }
-
                         }
                     }
                 }
@@ -126,13 +139,13 @@ class ScannerQrFragment : Fragment() {
 
     private fun sendQuery(): ProfileModel? {
         viewModel = ViewModelProvider(this).get(ScannerQrViewModel::class.java)
-        return viewModel.getProfile()?.get(2)
+        return viewModel.getProfile()?.get(9)
     }
 
     @SuppressLint("RestrictedApi")
     override fun onDestroyView() {
-        super.onDestroyView()
         cameraProvider.shutdown()
+        super.onDestroyView()
         _binding = null
     }
 }

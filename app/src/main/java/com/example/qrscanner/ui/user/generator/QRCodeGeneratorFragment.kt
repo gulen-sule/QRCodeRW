@@ -25,8 +25,8 @@ class QRCodeGeneratorFragment : Fragment() {
     private var _binding: FragmentQrcodeGeneratorBinding? = null
 
     private lateinit var timer: CountDownTimer
-    private val bitMatrixWidth = 600
-    private val bitMatrixHeight = 600
+    private val bitMatrixWidth =1000
+    private val bitMatrixHeight = 1000
     private val binding get() = _binding!!
     var profile: ResponseModel? = null
     var bitmap: Bitmap? = null
@@ -39,7 +39,7 @@ class QRCodeGeneratorFragment : Fragment() {
 
         _binding = FragmentQrcodeGeneratorBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        binding.contentLoadingProgressBar.progress = 0
+        binding.contentLoadingProgressBar.progress = 1
         return root
     }
 
@@ -59,7 +59,7 @@ class QRCodeGeneratorFragment : Fragment() {
 
         timer = object : CountDownTimer(initTime, 100) {
             override fun onTick(millisUntilFinished: Long) {
-                binding.contentLoadingProgressBar.incrementProgressBy(100)
+                binding.contentLoadingProgressBar.incrementProgressBy(109)
             }
 
             override fun onFinish() {
@@ -93,8 +93,7 @@ class QRCodeGeneratorFragment : Fragment() {
     private fun generateQr(content: String): Bitmap? {
         val writer = QRCodeWriter()
         val bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, bitMatrixWidth, bitMatrixHeight)
-        val draw = requireContext().getDrawable(R.drawable.background_generator)
-        draw?.toBitmap(bitMatrixWidth, bitMatrixHeight, Bitmap.Config.RGB_565)
+        val draw = requireContext().getDrawable(R.drawable.qr_code_bitmap_photo)
         val bitmap = draw?.toBitmap(bitMatrixWidth, bitMatrixHeight, Bitmap.Config.RGB_565)
         // Bitmap.createBitmap(bitMatrixWidth, bitMatrixHeight, Bitmap.Config.RGB_565)
         for (x in 0 until bitMatrixWidth) {
