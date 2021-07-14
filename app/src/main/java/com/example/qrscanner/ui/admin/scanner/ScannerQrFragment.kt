@@ -11,6 +11,7 @@ import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
@@ -27,6 +28,7 @@ import com.google.mlkit.vision.barcode.Barcode
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
+import java.time.Duration
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -65,6 +67,7 @@ class ScannerQrFragment : Fragment() {
 
         setImageAnalysis()
         bindCameraUseCases()
+        Toast.makeText(requireContext(),"Scan the qr code on the User screen",Toast.LENGTH_SHORT).show()
     }
 
     private fun setImageAnalysis() {

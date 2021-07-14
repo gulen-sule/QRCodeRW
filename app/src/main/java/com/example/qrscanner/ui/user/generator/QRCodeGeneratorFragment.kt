@@ -39,7 +39,7 @@ class QRCodeGeneratorFragment : Fragment() {
 
         _binding = FragmentQrcodeGeneratorBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        binding.contentLoadingProgressBar.progress = 1
+        binding.contentLoadingProgressBar.progress = 3
         return root
     }
 
@@ -71,7 +71,6 @@ class QRCodeGeneratorFragment : Fragment() {
             }
         }
         timer.start()
-
         barcodeInit()
     }
 

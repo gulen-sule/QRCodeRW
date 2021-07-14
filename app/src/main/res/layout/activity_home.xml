@@ -54,13 +54,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            app:cardCornerRadius="100dp">
+
+            app:cardCornerRadius="60dp">
 
             <ImageView
                 android:id="@+id/imageView2"
-                android:background="@color/white"
                 android:layout_width="130dp"
                 android:layout_height="130dp"
+                android:background="@color/white"
                 app:srcCompat="@drawable/logo" />
         </androidx.cardview.widget.CardView>
     </FrameLayout>
