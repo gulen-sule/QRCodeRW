@@ -8,23 +8,47 @@
     android:theme="@style/Theme.ScannerFragment"
     tools:context=".ui.user.generator.QRCodeGeneratorFragment">
 
-
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@drawable/foreground_generator"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="9dp"
+        android:elevation="23dp"
+        android:translationZ="12dp"
+        app:cardCornerRadius="29dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#E8F5FB">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="8dp"
+                android:src="@drawable/sample_qr"
+                android:visibility="visible" />
+        </FrameLayout>
+    </androidx.cardview.widget.CardView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:elevation="45sp"
-        android:outlineAmbientShadowColor="#090C0E"
+        android:elevation="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,30 +58,56 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:outlineAmbientShadowColor="@color/black"
+            android:elevation="30dp"
+            android:translationZ="25dp"
+            app:cardCornerRadius="40dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.progressindicator.CircularProgressIndicator
-                android:id="@+id/contentLoadingProgressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:max="100"
-                android:progress="80"
-                android:scrollbarStyle="outsideInset"
-                app:indicatorColor="#8DFFFFFF"
-                app:indicatorDirectionCircular="counterclockwise"
-                app:indicatorInset="10dp"
-                app:indicatorSize="40dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:trackColor="#018786"
-                app:trackThickness="30dp" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/card_view_progress_bar">
+
+                <TextView
+                    android:id="@+id/countBackTimeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:elevation="4dp"
+                    android:text="10"
+                    android:textColor="#050C39"
+                    android:textSize="16sp"
+                    android:translationZ="30dp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/contentLoadingProgressBar"
+                    app:layout_constraintEnd_toEndOf="@id/contentLoadingProgressBar"
+                    app:layout_constraintStart_toStartOf="@id/contentLoadingProgressBar"
+                    app:layout_constraintTop_toTopOf="@+id/contentLoadingProgressBar" />
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/contentLoadingProgressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|center_horizontal"
+                    android:progress="80"
+                    android:scrollbarStyle="outsideInset"
+                    android:translationZ="20dp"
+                    app:indicatorColor="#FFD15C"
+                    app:indicatorDirectionCircular="counterclockwise"
+                    app:indicatorInset="10dp"
+                    app:indicatorSize="40dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:trackColor="#FB8500"
+                    app:trackThickness="30dp" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.Guideline
@@ -65,5 +115,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="541dp" />
+        app:layout_constraintGuide_begin="527dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

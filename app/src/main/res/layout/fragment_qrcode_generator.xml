@@ -66,10 +66,26 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/card_view_progress_bar">
+
+                <TextView
+                    android:id="@+id/countBackTimeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:elevation="4dp"
+                    android:text="10"
+                    android:textColor="#050C39"
+                    android:textSize="18sp"
+                    android:translationZ="30dp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/contentLoadingProgressBar"
+                    app:layout_constraintEnd_toEndOf="@id/contentLoadingProgressBar"
+                    app:layout_constraintStart_toStartOf="@id/contentLoadingProgressBar"
+                    app:layout_constraintTop_toTopOf="@+id/contentLoadingProgressBar" />
+
                 <com.google.android.material.progressindicator.CircularProgressIndicator
                     android:id="@+id/contentLoadingProgressBar"
                     android:layout_width="wrap_content"
@@ -77,7 +93,7 @@
                     android:layout_gravity="center|center_horizontal"
                     android:progress="80"
                     android:scrollbarStyle="outsideInset"
-                    android:translationZ="89dp"
+                    android:translationZ="20dp"
                     app:indicatorColor="#FFD15C"
                     app:indicatorDirectionCircular="counterclockwise"
                     app:indicatorInset="10dp"
@@ -88,7 +104,8 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:trackColor="#FB8500"
                     app:trackThickness="30dp" />
-            </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.example.qrscanner.BarcodeReaderActivity
 import com.example.qrscanner.databinding.ActivityHomeBinding
 import com.example.qrscanner.ui.admin.AdminActivity
 import com.example.qrscanner.ui.user.UserActivity
@@ -34,6 +35,10 @@ class HomeActivity : AppCompatActivity() {
                 val intent = Intent(this, AdminActivity::class.java)
                 startActivity(intent)
 
+        }
+        binding.button.setOnClickListener {
+            val intent = Intent(this, BarcodeReaderActivity::class.java)
+            startActivity(intent)
         }
         binding.buttonUser.setOnClickListener {
             val intent = Intent(this, UserActivity::class.java)

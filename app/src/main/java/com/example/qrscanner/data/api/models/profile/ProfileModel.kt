@@ -8,7 +8,7 @@ data class ProfileModel(
     @SerializedName("createdAt") val createdAt : String,
     @SerializedName("name") val name : String,
     @SerializedName("lastName") val lastName : String,
-    @SerializedName("idNumber") val idNumber : String,
+    @SerializedName("idNumber") var idNumber : String,
     @SerializedName("avatar") val avatar : String?,
     @SerializedName("authorities") val authorities : List<Authority>?,
     @SerializedName("id") val id : Int

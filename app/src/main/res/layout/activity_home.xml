@@ -6,14 +6,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="0"
+        android:ems="10"
+        android:focusable="true"
+        android:inputType="textPersonName"
+        android:text="@={qrVM.qrResult}"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <Button
         android:id="@+id/buttonController"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:elevation="18dp"
+        android:fontFamily="@font/artifika"
+        android:paddingStart="10dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="8dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="4dp"
         android:text="Controller"
         android:textColor="#010729"
+        android:textSize="16sp"
+        android:textStyle="bold"
         android:translationZ="20dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,9 +47,18 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:elevation="18dp"
+        android:fontFamily="@font/artifika"
+        android:padding="4dp"
+        android:paddingStart="10dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="8dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="4dp"
         android:text="User"
         android:textColor="#010729"
-        android:translationZ="20dp"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:translationZ="16sp"
         app:layout_constraintEnd_toEndOf="@+id/buttonController"
         app:layout_constraintStart_toStartOf="@+id/buttonController"
         app:layout_constraintTop_toTopOf="@+id/guideline2" />
@@ -65,4 +96,14 @@
                 app:srcCompat="@drawable/logo" />
         </androidx.cardview.widget.CardView>
     </FrameLayout>
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="58dp"
+        android:text="Barcode Reader"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonUser" />
 </androidx.constraintlayout.widget.ConstraintLayout>

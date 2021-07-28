@@ -25,12 +25,12 @@ class QRCodeGeneratorFragment : Fragment() {
     private var _binding: FragmentQrcodeGeneratorBinding? = null
 
     private lateinit var timer: CountDownTimer
-    private val bitMatrixWidth =1000
+    private val bitMatrixWidth = 1000
     private val bitMatrixHeight = 1000
     private val binding get() = _binding!!
     var profile: ResponseModel? = null
     var bitmap: Bitmap? = null
-
+    private var countDown = 0
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -54,32 +54,44 @@ class QRCodeGeneratorFragment : Fragment() {
         binding.imageView.setImageBitmap(generateQr(token!!))
 
         initTime = (profile!!.time * 1000).toLong()
-
+        countDown = profile?.time!!
+        binding.countBackTimeText.text = profile?.time.toString()
         binding.contentLoadingProgressBar.max = initTime.toInt()
+        Log.d("millisTAG", initTime.toInt().toString())
 
-        timer = object : CountDownTimer(initTime, 100) {
-            override fun onTick(millisUntilFinished: Long) {
-                binding.contentLoadingProgressBar.incrementProgressBy(109)
-            }
+        val count = Handler(requireContext().mainLooper)
+        count.post {
+            timer = object : CountDownTimer(initTime, 98) {
+                override fun onTick(millisUntilFinished: Long) {
+                    if (countDown == 0) {
+                        binding.countBackTimeText.text = (binding.countBackTimeText.text.toString().toInt() - 1).toString()
+                        countDown = 10
+                    }
+                    countDown--
+                    binding.contentLoadingProgressBar.incrementProgressBy(105)
+                    Log.d("millisTAG", millisUntilFinished.toInt().toString())
+                }
 
-            override fun onFinish() {
-                //binding.contentLoadingProgressBar.incrementProgressBy(200)
-                binding.imageView.setImageBitmap(bitmap)
-                start()
-                barcodeInit()
+                override fun onFinish() {
+                    binding.imageView.setImageBitmap(bitmap)
+                    binding.countBackTimeText.text = 0.toString()
+                    binding.countBackTimeText.text = profile!!.time.toString()
+                    barcodeInit(count)
 
+                }
             }
         }
-        timer.start()
-        barcodeInit()
+        barcodeInit(count)
+
     }
 
-    fun barcodeInit() {
+    fun barcodeInit(count: Handler) {
+        countDown = profile?.time!!
         Handler(requireContext().mainLooper).post {
             binding.contentLoadingProgressBar.progress = 0
             profile = getResponse()
             bitmap = generateQr(profile?.token.toString())
-        }
+        }.also { count.post { timer.start() } }
     }
 
     private fun getResponse(): ResponseModel {
@@ -97,8 +109,9 @@ class QRCodeGeneratorFragment : Fragment() {
         // Bitmap.createBitmap(bitMatrixWidth, bitMatrixHeight, Bitmap.Config.RGB_565)
         for (x in 0 until bitMatrixWidth) {
             for (y in 0 until bitMatrixHeight) {
-                if (bitMatrix.get(x, y))
-                bitmap?.setPixel(x, y, Color.BLACK )
+                if (bitMatrix.get(x, y)) {
+                    bitmap?.setPixel(x, y, Color.BLACK)
+                }
             }
         }
         return bitmap

@@ -1,6 +1,9 @@
 package com.example.qrscanner.ui.admin.scanner
 
 import android.os.StrictMode
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.example.qrscanner.data.api.ProfileService
 import com.example.qrscanner.data.api.models.profile.ProfileModel
@@ -16,14 +19,15 @@ class ScannerQrViewModel : ViewModel() {
             .baseUrl(BASE_URL)
             .build()
             .create(ProfileService::class.java)
-        val policy:  StrictMode.ThreadPolicy = StrictMode.ThreadPolicy.Builder().permitAll().build();
+        val policy: StrictMode.ThreadPolicy = StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+       
     }
 
     fun getProfile(): List<ProfileModel>? {
         val response = retrofit.getProfile()
-
         return response.execute().body()
     }
+
 
 }
