@@ -46,7 +46,6 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
                     android:clickable="true"
-                    android:focusable="true"
                     app:tint="@color/white"
                     app:backgroundTint="#EF4813"
                     app:fabSize="mini"
