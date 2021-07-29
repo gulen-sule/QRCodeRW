@@ -24,6 +24,11 @@ class ProfileFragment : Fragment() {
     private lateinit var binding: FragmentProfileBinding
     private var shortAnimationDuration: Int = 0
     private var currentAnimator: Animator? = null
+    private var profileModel: ProfileModel? = null
+
+    fun setProfileModel(profile: ProfileModel?) {
+        profileModel = profile
+    }
 
     companion object {
         fun newInstance() = ProfileFragment()
@@ -39,10 +44,12 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val profile = arguments?.getSerializable("profileData") as ProfileModel?
-        profile?.let { Log.d("TAGidNumber", it.idNumber) }
+        var profile = arguments?.getSerializable("profileData") as ProfileModel?
+        if (profile == null) {
+            profile = profileModel
+        }
+        Log.d("profileTAG", profile?.name.toString())
         binding.profileData = profile
-        Log.e("TAG", profile?.avatar.toString())
         Glide.with(requireActivity()).load(profile?.avatar)
             .placeholder(R.drawable.image_placeholder)
             .override(600, 600).into(binding.photoProfile)
@@ -55,10 +62,9 @@ class ProfileFragment : Fragment() {
             }
         }
 
-//        }
-//        binding.floatingActionButton.setOnClickListener {
-//            requireActivity().onBackPressed()
-//        }
+        binding.floatingActionButton.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
     }
 
 

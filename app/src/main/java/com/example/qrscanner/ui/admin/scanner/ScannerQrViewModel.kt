@@ -13,6 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class ScannerQrViewModel : ViewModel() {
     private var retrofit: ProfileService
     private val BASE_URL = "https://60ebedc5e9647b0017cddf34.mockapi.io"
+    val qrResult = MutableLiveData("")
 
     init {
         retrofit = Retrofit.Builder().addConverterFactory(GsonConverterFactory.create())
@@ -21,7 +22,11 @@ class ScannerQrViewModel : ViewModel() {
             .create(ProfileService::class.java)
         val policy: StrictMode.ThreadPolicy = StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-       
+
+    }
+
+    fun clearLiveData() {
+        qrResult.postValue("")
     }
 
     fun getProfile(): List<ProfileModel>? {
