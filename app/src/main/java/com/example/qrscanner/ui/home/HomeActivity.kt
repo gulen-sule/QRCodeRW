@@ -1,9 +1,7 @@
 package com.example.qrscanner.ui.home
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.text.TextWatcher
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
@@ -14,11 +12,8 @@ import com.example.qrscanner.R
 import com.example.qrscanner.data.api.models.profile.ProfileModel
 import com.example.qrscanner.databinding.ActivityHomeBinding
 import com.example.qrscanner.isNumeric
-import com.example.qrscanner.ui.admin.AdminActivity
 import com.example.qrscanner.ui.admin.profile.ProfileFragment
 import com.example.qrscanner.ui.admin.scanner.ScannerQrViewModel
-import com.example.qrscanner.ui.user.UserActivity
-import com.google.gson.Gson
 
 class HomeActivity : AppCompatActivity() {
 
@@ -52,20 +47,19 @@ class HomeActivity : AppCompatActivity() {
 
     override fun dispatchKeyEvent(event: KeyEvent?): Boolean {
         var pressedKey = ""
-        if (event?.action == KeyEvent.ACTION_DOWN)
+        if (event?.action == KeyEvent.ACTION_UP) {
+            if (event.keyCode == KeyEvent.KEYCODE_BACK)
+                onBackPressed()
+
             pressedKey = event.unicodeChar.toChar().toString()
-        Log.d("KeyEventsStringLOG", pressedKey)
+        }
+       // Log.d("KeyEventsStringLOG", pressedKey)
         if (pressedKey != "\n") {
             viewModel.qrResult.value += pressedKey
         }
-        Log.d("KeyEventsTAG", Gson().toJson(event))
+       // Log.d("KeyEventsTAG", event.toString())
 
         return true
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d("StopTAG", "girdim")
     }
 
     private fun sendQuery(): ProfileModel? {
@@ -91,6 +85,7 @@ class HomeActivity : AppCompatActivity() {
                         Log.d("1to10TAG", "log")
                     }
                     11 -> {
+                        binding.progressBarHome.visibility=View.VISIBLE
                         val id = viewModel.qrResult.value
                         Log.d("idTAG", id.toString())
                         val profile = sendQuery()
@@ -123,7 +118,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun commitTransaction() {
         transaction?.commit().also {
-            binding.progressBarHome.visibility = View.INVISIBLE
+            binding.progressBarHome.visibility = View.GONE
         }
     }
 
