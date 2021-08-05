@@ -7,6 +7,7 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -18,11 +19,6 @@
         android:theme="@style/Theme.ScannerFragment"
         android:usesCleartextTraffic="true"
         tools:targetApi="n">
-        <service
-            android:name=".ClipBoardService"
-            android:enabled="true"
-            android:exported="true" />
-
         <activity
             android:name=".ui.admin.zoom.ZoomActivity"
             android:theme="@style/Theme.ScannerFragment" />

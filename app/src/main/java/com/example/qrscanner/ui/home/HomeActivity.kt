@@ -3,24 +3,33 @@ package com.example.qrscanner.ui.home
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
+import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.example.qrscanner.R
 import com.example.qrscanner.data.api.models.profile.ProfileModel
+import com.example.qrscanner.data.api.models.profile.UserResponse
 import com.example.qrscanner.databinding.ActivityHomeBinding
 import com.example.qrscanner.isNumeric
 import com.example.qrscanner.ui.admin.profile.ProfileFragment
 import com.example.qrscanner.ui.admin.scanner.ScannerQrViewModel
+import com.google.gson.Gson
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import java.math.BigInteger
+import java.util.*
 
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var viewModel: ScannerQrViewModel
     private var token = ""
-
+    private var barcode = ""
+    private var toastCalled = false
     private val cTimer = object : CountDownTimer(300, 100) {
         override fun onTick(millisUntilFinished: Long) {
         }
@@ -53,18 +62,20 @@ class HomeActivity : AppCompatActivity() {
 
             pressedKey = event.unicodeChar.toChar().toString()
         }
-       // Log.d("KeyEventsStringLOG", pressedKey)
+        // Log.d("KeyEventsStringLOG", pressedKey)
         if (pressedKey != "\n") {
             viewModel.qrResult.value += pressedKey
         }
-       // Log.d("KeyEventsTAG", event.toString())
+        // Log.d("KeyEventsTAG", event.toString())
 
         return true
     }
 
-    private fun sendQuery(): ProfileModel? {
+    private fun sendQuery(id_number: BigInteger, completed: (ProfileModel?) -> Unit) {
         viewModel = ViewModelProvider(this).get(ScannerQrViewModel::class.java)
-        return viewModel.getProfile()?.get(7)
+        viewModel.getProfile(id_number) {
+            completed(it)
+        }
     }
 
     override fun onBackPressed() {
@@ -85,23 +96,52 @@ class HomeActivity : AppCompatActivity() {
                         Log.d("1to10TAG", "log")
                     }
                     11 -> {
-                        binding.progressBarHome.visibility=View.VISIBLE
+                        binding.progressBarHome.visibility = View.VISIBLE
                         val id = viewModel.qrResult.value
                         Log.d("idTAG", id.toString())
-                        val profile = sendQuery()
-                        cTimer.cancel()
-                        viewModel.clearLiveData()
-                        if (id != null) {
-                            profile?.idNumber = id
+                        sendQuery(id!!.toBigInteger()) {
+                            val profile = it
+                            if (profile != null) {
+                                beginTransactionProfile(profile)
+                            } else {
+                                binding.progressBarHome.visibility = View.GONE
+                                showToastMsg(id)
+                            }
+                        }.also {
+                            cTimer.cancel()
+                            viewModel.clearLiveData()
                         }
-                        beginTransactionProfile(profile)
                     }
                 }
             } else {
-                Log.d("lengthOfLiveData", it.length.toString() + "<" + it.toString() + ">")
+                showToastMsg()
             }
         }
     }
+
+    private fun showToastMsg(wrongCode: String) {
+        if (barcode != wrongCode) {
+            barcode = wrongCode
+            val toast = Toast.makeText(this, "Please hold the camera to the right barcode", Toast.LENGTH_SHORT)
+            toast.setGravity(Gravity.CENTER, 0, 0)
+            toast.show()
+        }
+    }
+
+    private fun showToastMsg() {
+        if (!toastCalled) {
+            toastCalled = true
+            GlobalScope.async {
+
+                toastCalled = false
+            }
+            val toast = Toast.makeText(this, "Please hold the camera to the right barcode", Toast.LENGTH_SHORT)
+            toast.setGravity(Gravity.CENTER, 0, 0)
+            toast.show()
+        }
+
+    }
+
 
     private var transaction: FragmentTransaction? = null
     private var profileFragment: ProfileFragment? = null
