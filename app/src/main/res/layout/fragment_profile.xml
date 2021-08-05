@@ -2,9 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-
     <data>
-
         <variable
             name="profileData"
             type="com.example.qrscanner.data.api.models.profile.ProfileModel" />
@@ -223,7 +221,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
                                 android:fontFamily="sans-serif-condensed-light"
-                                android:text="@{profileData.idNumber}"
+                                android:text="@{profileData.idNumber.toString()}"
                                 android:textColor="#050505"
                                 android:textSize="19sp"
                                 android:textStyle="normal" />
