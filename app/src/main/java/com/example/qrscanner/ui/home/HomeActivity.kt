@@ -12,12 +12,10 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.example.qrscanner.R
 import com.example.qrscanner.data.api.models.profile.ProfileModel
-import com.example.qrscanner.data.api.models.profile.UserResponse
 import com.example.qrscanner.databinding.ActivityHomeBinding
 import com.example.qrscanner.isNumeric
 import com.example.qrscanner.ui.admin.profile.ProfileFragment
 import com.example.qrscanner.ui.admin.scanner.ScannerQrViewModel
-import com.google.gson.Gson
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import java.math.BigInteger
@@ -66,7 +64,6 @@ class HomeActivity : AppCompatActivity() {
         if (pressedKey != "\n") {
             viewModel.qrResult.value += pressedKey
         }
-        // Log.d("KeyEventsTAG", event.toString())
 
         return true
     }
@@ -99,10 +96,9 @@ class HomeActivity : AppCompatActivity() {
                         binding.progressBarHome.visibility = View.VISIBLE
                         val id = viewModel.qrResult.value
                         Log.d("idTAG", id.toString())
-                        sendQuery(id!!.toBigInteger()) {
-                            val profile = it
-                            if (profile != null) {
-                                beginTransactionProfile(profile)
+                        sendQuery(id!!.toBigInteger()) {model->
+                            if (model != null) {
+                                beginTransactionProfile(model)
                             } else {
                                 binding.progressBarHome.visibility = View.GONE
                                 showToastMsg(id)
@@ -132,7 +128,7 @@ class HomeActivity : AppCompatActivity() {
         if (!toastCalled) {
             toastCalled = true
             GlobalScope.async {
-
+                Thread.sleep(2000);
                 toastCalled = false
             }
             val toast = Toast.makeText(this, "Please hold the camera to the right barcode", Toast.LENGTH_SHORT)
@@ -161,41 +157,6 @@ class HomeActivity : AppCompatActivity() {
             binding.progressBarHome.visibility = View.GONE
         }
     }
-
-/*
-    private var textWatcher: TextWatcher? = null
-    private fun getTextWatcher(): TextWatcher {
-        return object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                Log.d("textTAG", s.toString())
-                if (s?.isNotEmpty()!! && s.isNotBlank())
-                    token += s[start] + ""
-                when (token.length) {
-                    in 1..10 -> {
-                        cTimer.cancel()
-                        cTimer.start()
-                    }
-                    11 -> {
-                        binding.progressBarHome.visibility = View.VISIBLE
-                        val profile = sendQuery()
-                        cTimer.cancel()
-                        profile?.idNumber = token
-                        token = ""
-                        beginTransactionProfile(profile)
-                    }
-                    else -> {
-                        Log.e("Error", "something is going wrong" + token.length)
-                    }
-                }
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-            }
-        }
-    }*/
 
 
     /*  private fun setBottomNavigation() {
