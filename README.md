@@ -2,14 +2,14 @@
 
 -Camera ile veya barcode okuyucu ile calisabilir durumda
 
-
-
 text watcher kullanımı ile ilgili kısım (HomeActivity.kt de yaziyordu onun yerine live data kullandigin icin kaldirdin):
 
 /*
+
     private var textWatcher: TextWatcher? = null
     private fun getTextWatcher(): TextWatcher {
         return object : TextWatcher {
+
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
@@ -39,5 +39,7 @@ text watcher kullanımı ile ilgili kısım (HomeActivity.kt de yaziyordu onun y
             override fun afterTextChanged(s: Editable?) {
             }
         }
-    }*/
+    }
+
+*/
 
