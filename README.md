@@ -43,3 +43,4 @@ text watcher kullanımı ile ilgili kısım (HomeActivity.kt de yaziyordu onun y
 
 */
 
+# Barcode_Reader_Id_Number
