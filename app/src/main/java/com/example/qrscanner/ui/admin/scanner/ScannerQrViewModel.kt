@@ -31,15 +31,17 @@ class ScannerQrViewModel : ViewModel() {
     }
 
     fun clearLiveData() {
+        qrResult.value=""
         qrResult.postValue("")
     }
 
     fun getProfile(id_number: BigInteger, completed: (ProfileModel?) -> Unit) {
         val response = retrofit.getProfile(id_number = id_number)
-
+        clearLiveData()
         response.enqueue(object : Callback<ProfileModel> {
             override fun onResponse(call: Call<ProfileModel>, response: Response<ProfileModel>) {
                 val profileModel = response.body()
+
                 completed(profileModel)
                 Log.d("CallbackTAG", Gson().toJson(response.body()))
             }

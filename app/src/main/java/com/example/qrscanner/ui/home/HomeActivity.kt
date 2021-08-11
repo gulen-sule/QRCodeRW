@@ -64,7 +64,6 @@ class HomeActivity : AppCompatActivity() {
         if (pressedKey != "\n") {
             viewModel.qrResult.value += pressedKey
         }
-
         return true
     }
 
@@ -96,9 +95,10 @@ class HomeActivity : AppCompatActivity() {
                         binding.progressBarHome.visibility = View.VISIBLE
                         val id = viewModel.qrResult.value
                         Log.d("idTAG", id.toString())
-                        sendQuery(id!!.toBigInteger()) {model->
+                        sendQuery(id!!.toBigInteger()) { model ->
                             if (model != null) {
-                                beginTransactionProfile(model)
+                                beginTransactionProfile(model).also { viewModel.clearLiveData() }
+
                             } else {
                                 binding.progressBarHome.visibility = View.GONE
                                 showToastMsg(id)

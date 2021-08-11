@@ -135,12 +135,10 @@ open class ScannerQrFragment : Fragment() {
                             sendQuery(barcode.displayValue!!.toBigInteger()) {
                                 val profile: ProfileModel? = it
                                 if (profile != null) {
-
                                     if (!soundVibrateCalled) {
                                         soundPool().also { vibratePhone() }
                                         soundVibrateCalled = true
                                     }
-
                                     if (findNavController().currentDestination?.id == R.id.scannerQrFragment) {
                                         val action = ScannerQrFragmentDirections.actionScannerQrFragmentToProfileFragment(profile)
                                         findNavController().navigate(action)
