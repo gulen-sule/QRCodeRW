@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'androidx.navigation.safeargs'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -19,6 +20,7 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
     android.buildFeatures.dataBinding = true
     buildTypes {
         release {
@@ -74,6 +76,10 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.7'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.2.1'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.6.2'
+    implementation group: 'io.reactivex.rxjava2', name: 'rxjava', version: '2.2.6'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
     //navigation component
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
@@ -89,5 +95,6 @@ dependencies {
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     //slide-back-layout
     implementation 'com.github.phantomVK.SlideBack:slideback:0.4.8'
+
 
 }

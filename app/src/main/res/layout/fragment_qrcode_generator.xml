@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#325985"
     android:theme="@style/Theme.ScannerFragment"
-    tools:context=".ui.user.generator.QRCodeGeneratorFragment">
+    tools:context=".ui.user.qrCodeGenerator.QRCodeGeneratorFragment">
 
     <ImageView
         android:layout_width="wrap_content"

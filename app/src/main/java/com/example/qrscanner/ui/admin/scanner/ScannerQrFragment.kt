@@ -48,6 +48,7 @@ open class ScannerQrFragment : Fragment() {
     private lateinit var cameraProvider: ProcessCameraProvider
     private var token: String? = null
     private var soundVibrateCalled = false
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -131,7 +132,6 @@ open class ScannerQrFragment : Fragment() {
                     val valueType = barcode.valueType
 
                     if (valueType == Barcode.TYPE_TEXT) {
-                        if (barcode?.displayValue?.isNumeric() == true) {
                             sendQuery(barcode.displayValue!!.toBigInteger()) {
                                 val profile: ProfileModel? = it
                                 if (profile != null) {
@@ -149,9 +149,7 @@ open class ScannerQrFragment : Fragment() {
                                     showToastMsg(wrongCode)
                                 }
                             }
-                        } else {
-                            showToastMsg(wrongCode)
-                        }
+
                     } else {
                         showToastMsg(wrongCode)
                     }
@@ -173,7 +171,7 @@ open class ScannerQrFragment : Fragment() {
     private fun soundPool() {
         val pl = SoundPool(5, AudioManager.STREAM_MUSIC, 0);
         pl.load(requireContext(), R.raw.beep_short, 0)
-        pl.setOnLoadCompleteListener(SoundPool.OnLoadCompleteListener { soundPool, sampleId, status ->
+        pl.setOnLoadCompleteListener(SoundPool.OnLoadCompleteListener { soundPool, sampleId, _ ->
             soundPool.play(sampleId, 1f, 1f, 0, 0, 1f);
         })
     }

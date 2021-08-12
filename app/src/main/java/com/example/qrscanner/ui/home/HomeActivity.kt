@@ -26,6 +26,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
     private lateinit var viewModel: ScannerQrViewModel
     private var token = ""
+    private var id = ""
     private var barcode = ""
     private var toastCalled = false
     private val cTimer = object : CountDownTimer(300, 100) {
@@ -62,7 +63,10 @@ class HomeActivity : AppCompatActivity() {
         }
         // Log.d("KeyEventsStringLOG", pressedKey)
         if (pressedKey != "\n") {
-            viewModel.qrResult.value += pressedKey
+            viewModel.qrResult.value+= pressedKey
+        } else {
+            viewModel.qrResult.postValue(id)
+            id=""
         }
 
         return true
@@ -83,10 +87,10 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun mutableDataSetObserver() {
-        viewModel.qrResult.observe(this) {
-            Log.d("liveDataValueTAG", it)
-            if (it != null && it.toString().isNumeric()) {
-                when (it.toString().length) {
+        viewModel.qrResult.observe(this) { qrLiveData ->
+            Log.d("liveDataValueTAG", qrLiveData)
+            if (qrLiveData != null && qrLiveData.toString().isNumeric()) {
+                when (qrLiveData.toString().length) {
                     in 1..10 -> {
                         cTimer.cancel()
                         cTimer.start()
@@ -94,9 +98,9 @@ class HomeActivity : AppCompatActivity() {
                     }
                     11 -> {
                         binding.progressBarHome.visibility = View.VISIBLE
-                        val id = viewModel.qrResult.value
+                        val id = qrLiveData
                         Log.d("idTAG", id.toString())
-                        sendQuery(id!!.toBigInteger()) {model->
+                        sendQuery(id!!.toBigInteger()) { model ->
                             if (model != null) {
                                 beginTransactionProfile(model)
                             } else {

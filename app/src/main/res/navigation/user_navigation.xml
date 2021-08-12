@@ -6,7 +6,7 @@
     app:startDestination="@id/QRCodeGeneratorFragment">
     <fragment
         android:id="@+id/QRCodeGeneratorFragment"
-        android:name="com.example.qrscanner.ui.user.generator.QRCodeGeneratorFragment"
+        android:name="com.example.qrscanner.ui.user.qrCodeGenerator.QRCodeGeneratorFragment"
         android:label="fragment_qrcode_generator"
         tools:layout="@layout/fragment_qrcode_generator" />
 </navigation>

@@ -1,8 +1,9 @@
 package com.example.qrscanner.data
 
-import java.util.*
+import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class ResponseModel(
-    var token:String?,
-    var time:Int=30,
-)
+    @SerializedName("token") var token:String?,
+    @SerializedName("time") var time:Int=30,
+):Serializable

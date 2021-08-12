@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:noHistory="true"
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -9,22 +10,23 @@
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/image_splash_sc_sec"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
 
         <Button
             android:id="@+id/buttonController"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
+            android:backgroundTint="#031C6D"
             android:elevation="18dp"
             android:fontFamily="@font/artifika"
             android:paddingTop="12dp"
             android:paddingEnd="8dp"
             android:paddingBottom="12dp"
             android:text=" Controller "
-            android:textColor="#010729"
+            android:textColor="#F3F3F4"
             android:textSize="22sp"
             android:textStyle="bold"
             android:translationZ="20dp"
@@ -38,13 +40,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
+            android:backgroundTint="#031C6D"
             android:elevation="18dp"
             android:fontFamily="@font/artifika"
             android:paddingTop="12dp"
             android:paddingEnd="8dp"
             android:paddingBottom="12dp"
             android:text=" User "
-            android:textColor="#010729"
+            android:textColor="#EFF0F4"
             android:textSize="22sp"
             android:textStyle="bold"
             android:translationZ="16sp"
@@ -66,7 +69,6 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginBottom="48dp"
-            android:background="@color/white"
             app:layout_constraintBottom_toTopOf="@+id/buttonController"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
@@ -76,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:focusable="false"
-                app:cardCornerRadius="60dp">
+                app:cardCornerRadius="62dp">
 
                 <ImageView
                     android:id="@+id/imageView2"
@@ -86,6 +88,23 @@
                     app:srcCompat="@drawable/logo" />
             </androidx.cardview.widget.CardView>
         </FrameLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/profileButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:backgroundTint="#B7E4E6"
+            android:clickable="true"
+            android:scaleType="fitCenter"
+            app:backgroundTint="#659397"
+            app:fabSize="auto"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:maxImageSize="48dp"
+            app:rippleColor="#449295"
+            app:srcCompat="@drawable/ic_account_circle" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

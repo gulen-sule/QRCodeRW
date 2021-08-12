@@ -1,4 +1,4 @@
-package com.example.qrscanner.ui.user.generator
+package com.example.qrscanner.ui.user.qrCodeGenerator
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
@@ -17,18 +17,19 @@ import androidx.fragment.app.Fragment
 import com.example.qrscanner.R
 import com.example.qrscanner.data.ResponseModel
 import com.example.qrscanner.databinding.FragmentQrcodeGeneratorBinding
+import com.google.gson.Gson
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
-import java.util.*
 
 class QRCodeGeneratorFragment : Fragment() {
     private var _binding: FragmentQrcodeGeneratorBinding? = null
-
+    private val viewModel: QrCodeGeneratorViewModel = QrCodeGeneratorViewModel()
     private lateinit var timer: CountDownTimer
     private val bitMatrixWidth = 1000
     private val bitMatrixHeight = 1000
+
     private val binding get() = _binding!!
-    var profile: ResponseModel? = null
+    var barcodeToken: ResponseModel? = null
     var bitmap: Bitmap? = null
     private var countDown = 0
     override fun onCreateView(
@@ -48,14 +49,23 @@ class QRCodeGeneratorFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        profile = getResponse()
-        val token = profile!!.token
+        viewModel.getToken { responseModel ->
+            barcodeToken = responseModel;
+            if (barcodeToken == null) {
+                requireActivity().finish()
+            } else {
+                generate()
+            }
+        }
+    }
 
-        binding.imageView.setImageBitmap(generateQr(token!!))
 
-        initTime = (profile!!.time * 1000).toLong()
-        countDown = profile?.time!!
-        binding.countBackTimeText.text = profile?.time.toString()
+    private fun generate() {
+        binding.imageView.setImageBitmap(barcodeToken?.token?.let { generateQr(it) })
+        Log.d("barcodeTAG", Gson().toJson(barcodeToken))
+        initTime = (barcodeToken!!.time * 1000).toLong()
+        countDown = barcodeToken?.time!!
+        binding.countBackTimeText.text = barcodeToken?.time.toString()
         binding.contentLoadingProgressBar.max = initTime.toInt()
         Log.d("millisTAG", initTime.toInt().toString())
 
@@ -75,7 +85,7 @@ class QRCodeGeneratorFragment : Fragment() {
                 override fun onFinish() {
                     binding.imageView.setImageBitmap(bitmap)
                     binding.countBackTimeText.text = 0.toString()
-                    binding.countBackTimeText.text = profile!!.time.toString()
+                    binding.countBackTimeText.text = barcodeToken!!.time.toString()
                     barcodeInit(count)
 
                 }
@@ -86,19 +96,16 @@ class QRCodeGeneratorFragment : Fragment() {
     }
 
     fun barcodeInit(count: Handler) {
-        countDown = profile?.time!!
+        countDown = barcodeToken?.time!!
         Handler(requireContext().mainLooper).post {
             binding.contentLoadingProgressBar.progress = 0
-            profile = getResponse()
-            bitmap = generateQr(profile?.token.toString())
+            viewModel.getToken { response ->
+                barcodeToken = response
+            }
+            bitmap = generateQr(barcodeToken?.token.toString())
         }.also { count.post { timer.start() } }
     }
 
-    private fun getResponse(): ResponseModel {
-        val token = UUID.randomUUID().toString() + UUID.randomUUID().toString().substring(0, 4)
-        Log.e("tokenTAG", token)
-        return ResponseModel(token = token, time = 10)
-    }
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private fun generateQr(content: String): Bitmap? {
