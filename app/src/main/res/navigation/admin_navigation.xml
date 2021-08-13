@@ -24,8 +24,8 @@
             android:id="@+id/action_profileFragment_to_scannerQrFragment"
             app:destination="@id/scannerQrFragment" />
         <argument
-            android:name="profileData"
-            app:argType="com.example.qrscanner.data.api.models.profile.ProfileModel"
+            android:name="queryToken"
+            app:argType="string"
             app:nullable="true" />
     </fragment>
 

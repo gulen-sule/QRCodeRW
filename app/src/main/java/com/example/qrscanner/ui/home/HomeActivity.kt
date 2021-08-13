@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.example.qrscanner.R
+import com.example.qrscanner.data.api.models.barcodeResponse.BarcodeResponse
 import com.example.qrscanner.data.api.models.profile.ProfileModel
 import com.example.qrscanner.databinding.ActivityHomeBinding
 import com.example.qrscanner.isNumeric
@@ -24,9 +25,8 @@ import java.util.*
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding
-    private lateinit var viewModel: ScannerQrViewModel
+    private val viewModel: ScannerQrViewModel = ScannerQrViewModel()
     private var token = ""
-    private var id = ""
     private var barcode = ""
     private var toastCalled = false
     private val cTimer = object : CountDownTimer(300, 100) {
@@ -43,7 +43,6 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportFragmentManager.beginTransaction().replace(R.id.frameLayoutHome, HomeFragment()).commit()
-        viewModel = ScannerQrViewModel()
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
     }
@@ -63,21 +62,16 @@ class HomeActivity : AppCompatActivity() {
         }
         // Log.d("KeyEventsStringLOG", pressedKey)
         if (pressedKey != "\n") {
-            viewModel.qrResult.value+= pressedKey
+            barcode += pressedKey
         } else {
-            viewModel.qrResult.postValue(id)
-            id=""
+            viewModel.qrResult.postValue(barcode)
+            barcode= ""
         }
 
         return true
     }
 
-    private fun sendQuery(id_number: BigInteger, completed: (ProfileModel?) -> Unit) {
-        viewModel = ViewModelProvider(this).get(ScannerQrViewModel::class.java)
-        viewModel.getProfile(id_number) {
-            completed(it)
-        }
-    }
+
 
     override fun onBackPressed() {
         super.onBackPressed()
@@ -87,29 +81,31 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun mutableDataSetObserver() {
+        val tokenLength = 30
         viewModel.qrResult.observe(this) { qrLiveData ->
             Log.d("liveDataValueTAG", qrLiveData)
             if (qrLiveData != null && qrLiveData.toString().isNumeric()) {
                 when (qrLiveData.toString().length) {
-                    in 1..10 -> {
+                    in 1 until tokenLength -> {
                         cTimer.cancel()
                         cTimer.start()
                         Log.d("1to10TAG", "log")
                     }
-                    11 -> {
+                    tokenLength -> {
                         binding.progressBarHome.visibility = View.VISIBLE
-                        val id = qrLiveData
-                        Log.d("idTAG", id.toString())
-                        sendQuery(id!!.toBigInteger()) { model ->
-                            if (model != null) {
-                                beginTransactionProfile(model)
-                            } else {
+                        val token = qrLiveData
+                        Log.d( "barcodeTAG", barcode)
+                        viewModel.getProfile(token){barcodeResponse->
+                            if(barcodeResponse!=null)
+                                beginTransactionProfile(barcodeResponse)
+                            else {
                                 binding.progressBarHome.visibility = View.GONE
-                                showToastMsg(id)
+                                showToastMsg(barcode)
                             }
                         }.also {
                             cTimer.cancel()
                             viewModel.clearLiveData()
+
                         }
                     }
                 }
@@ -145,13 +141,13 @@ class HomeActivity : AppCompatActivity() {
 
     private var transaction: FragmentTransaction? = null
     private var profileFragment: ProfileFragment? = null
-    private fun beginTransactionProfile(profile: ProfileModel?) {
+    private fun beginTransactionProfile(response: BarcodeResponse?) {
         if (profileFragment == null) {
             profileFragment = ProfileFragment()
-            profileFragment?.setProfileModel(profile)
+           // profileFragment?.setProfileModel(profile)
         }
         transaction = supportFragmentManager.beginTransaction().replace(R.id.frameLayoutHome, profileFragment!!)
-        Log.d("profileTAG", profile?.name.toString())
+      //  Log.d("profileTAG", profile?.name.toString())
         transaction?.addToBackStack(this@HomeActivity.localClassName)
         commitTransaction()
     }
@@ -159,6 +155,23 @@ class HomeActivity : AppCompatActivity() {
     private fun commitTransaction() {
         transaction?.commit().also {
             binding.progressBarHome.visibility = View.GONE
+        }
+    }
+
+
+    private fun unvalidBarcodeBottomSheet(status: Int) {
+        val message = giveDeniedMessage(status)
+    }
+
+    private fun giveDeniedMessage(status: Int): String {
+        return when(status){
+            1-> "You do not have executive's permission"
+            2-> "This barcode is expired"
+            3-> "You do not have controller mission"
+            4-> "There is none person in the list with this uuid"
+            5-> "Permission is not available"
+            6-> "Your permission is denied"
+            else-> "Unknown error is occurred"
         }
     }
 

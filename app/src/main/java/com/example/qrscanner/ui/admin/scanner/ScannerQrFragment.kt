@@ -2,6 +2,7 @@ package com.example.qrscanner.ui.admin.scanner
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.Resources
@@ -11,6 +12,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.util.Log
 import android.util.Size
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -24,19 +26,20 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.qrscanner.R
+import com.example.qrscanner.data.api.models.barcodeResponse.BarcodeResponse
 import com.example.qrscanner.data.api.models.profile.ProfileModel
 import com.example.qrscanner.databinding.FragmentScannerBinding
-import com.example.qrscanner.isNumeric
+import com.example.qrscanner.ui.admin.BottomSheetUnvalidFragment
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.mlkit.vision.barcode.Barcode
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
-import java.math.BigInteger
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+
 
 open class ScannerQrFragment : Fragment() {
     private lateinit var executorService: ExecutorService
@@ -44,10 +47,13 @@ open class ScannerQrFragment : Fragment() {
     private var _binding: FragmentScannerBinding? = null
     private var time: Long = 0L
     private val binding get() = _binding!!
-    private lateinit var viewModel: ScannerQrViewModel
+    private var viewModel: ScannerQrViewModel = ScannerQrViewModel()
     private lateinit var cameraProvider: ProcessCameraProvider
     private var token: String? = null
+    private var bottomSheet = BottomSheetUnvalidFragment()
+    var bottomSheetBehaviour: BottomSheetBehavior<View>? = null
     private var soundVibrateCalled = false
+    private var alertDialog: AlertDialog? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,12 +66,24 @@ open class ScannerQrFragment : Fragment() {
                 requestPermissions(arrayOf(Manifest.permission.CAMERA), PackageManager.PERMISSION_GRANTED)
             }
         }
+        bottomSheet.onCreateView(inflater, container, savedInstanceState)
+        alertDialog = AlertDialog.Builder(requireContext()).create()
+        val window = alertDialog!!.window
+        window?.setGravity(Gravity.BOTTOM)
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        soundVibrateCalled = false
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //dialog.onViewCreated(view, savedInstanceState)
+        bottomSheet.onViewCreated(view, savedInstanceState)
+        bottomSheetBehaviour = BottomSheetBehavior.from(requireActivity().findViewById(R.id.bottomSheetLayout))
+        bottomSheetBehaviour?.state = BottomSheetBehavior.STATE_HIDDEN
+
         time = System.currentTimeMillis()
         runScanner()
     }
@@ -104,10 +122,6 @@ open class ScannerQrFragment : Fragment() {
 
     }
 
-    override fun onResume() {
-        super.onResume()
-        soundVibrateCalled = false
-    }
 
     @SuppressLint("UnsafeOptInUsageError")
     private fun scanBarcodes(image: ImageProxy) {
@@ -116,8 +130,7 @@ open class ScannerQrFragment : Fragment() {
         val options = BarcodeScannerOptions.Builder()//hizlandirmak icin sadece qr code okuyacagini soyluyorum
             .setBarcodeFormats(
                 Barcode.FORMAT_QR_CODE
-            )
-            .build()
+            ).build()
 
         val scanner = BarcodeScanning.getClient(options)//get detector
 
@@ -126,33 +139,15 @@ open class ScannerQrFragment : Fragment() {
 
             scanner.process(inputImage).addOnSuccessListener { barcodes ->
                 // [START get_barcodes]
-
                 for (barcode in barcodes) {
                     val wrongCode = barcode.displayValue
                     val valueType = barcode.valueType
 
                     if (valueType == Barcode.TYPE_TEXT) {
-                            sendQuery(barcode.displayValue!!.toBigInteger()) {
-                                val profile: ProfileModel? = it
-                                if (profile != null) {
-
-                                    if (!soundVibrateCalled) {
-                                        soundPool().also { vibratePhone() }
-                                        soundVibrateCalled = true
-                                    }
-
-                                    if (findNavController().currentDestination?.id == R.id.scannerQrFragment) {
-                                        val action = ScannerQrFragmentDirections.actionScannerQrFragmentToProfileFragment(profile)
-                                        findNavController().navigate(action)
-                                    }
-                                } else {
-                                    showToastMsg(wrongCode)
-                                }
-                            }
-
-                    } else {
+                        if (!alertDialog!!.isShowing)
+                            getProfile(barcode)
+                    } else
                         showToastMsg(wrongCode)
-                    }
                 }
             }.addOnFailureListener { }.addOnCompleteListener {
                 image.image?.close()
@@ -161,12 +156,32 @@ open class ScannerQrFragment : Fragment() {
         }
     }
 
-    private fun sendQuery(id_number: BigInteger, completed: (ProfileModel?) -> Unit) {
-        viewModel = ViewModelProvider(this).get(ScannerQrViewModel::class.java)
-        viewModel.getProfile(id_number) {
-            completed(it)
+    private fun getProfile(barcode: Barcode) {
+        Log.d("wrongCodeTAG", barcode.displayValue.toString())
+        viewModel.getProfile(barcode.displayValue) { barcode_response ->
+            if (barcode_response != null) {
+                if (barcode_response.status == 0) {
+                    if (!soundVibrateCalled) {
+                        soundPool().also { vibratePhone() }
+                        soundVibrateCalled = true
+                    }
+                    switchToProfileFrag(barcode_response)
+                } else {
+                    invalidBarcodeBottomSheet(barcode_response.status)
+                }
+            } else {
+                invalidBarcodeBottomSheet(7)
+            }
         }
     }
+
+    private fun switchToProfileFrag(response: BarcodeResponse) {
+        if (findNavController().currentDestination?.id == R.id.scannerQrFragment) {
+            val action = ScannerQrFragmentDirections.actionScannerQrFragmentToProfileFragment(response.token)
+            findNavController().navigate(action)
+        }
+    }
+
 
     private fun soundPool() {
         val pl = SoundPool(5, AudioManager.STREAM_MUSIC, 0);
@@ -178,6 +193,7 @@ open class ScannerQrFragment : Fragment() {
 
     private fun showToastMsg(wrongCode: String?) {
         if (!(token.equals(wrongCode))) {
+            Log.d("wrongCodeTAG", wrongCode.toString())
             token = wrongCode
             val toast = Toast.makeText(requireContext(), "Please hold the camera to the right barcode", Toast.LENGTH_SHORT)
             toast.setGravity(Gravity.CENTER, 0, 0)
@@ -201,5 +217,32 @@ open class ScannerQrFragment : Fragment() {
         }
     }
 
+
+    private fun invalidBarcodeBottomSheet(status: Int) {
+        if (!alertDialog!!.isShowing) {
+            alertDialog!!.setTitle("Failed")
+            val message = giveDeniedMessage(status)
+            alertDialog!!.setMessage(message)
+            alertDialog!!.show()
+        }
+        /*if (!isBottomSOpened) {
+            val message = giveDeniedMessage(status)
+            requireActivity().findViewById<TextView>(R.id.bottomSheetText).text = message
+            bottomSheetBehaviour!!.state = BottomSheetBehavior.STATE_EXPANDED
+        }*/
+    }
+
+    private fun giveDeniedMessage(status: Int): String {
+        return when (status) {
+            1 -> "You do not have executive's permission"
+            2 -> "This barcode is expired"
+            3 -> "You do not have controller mission"
+            4 -> "There is none person in the list with this uuid"
+            5 -> "Permission is not available"
+            6 -> "Your permission is denied"
+            7 -> "This token is not valid"
+            else -> "Unknown error is occurred"
+        }
+    }
 
 }

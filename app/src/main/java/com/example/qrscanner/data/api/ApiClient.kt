@@ -138,12 +138,13 @@ class ApiClient {
                         in 200..301 -> {
                             success(response.body() as T, response.code(), response.message().toString())
                             loading(false)
+                            Log.d("fetchTAG","code: 200")
                         }
                         401 -> {// token expire oldugunda bu code doner databasei guncelle
                             response.errorBody()?.let {
                                 failure()
                             }
-
+                            Log.d("fetchTAG","code: 401")
                             loading(false)
                             //unAuthenticated()
                         }
@@ -151,9 +152,11 @@ class ApiClient {
                             response.errorBody()?.let {
                                 failure()
                             }
+                            Log.d("fetchTAG","code: 400 ... 500 ")
                             loading(false)
                         }
                         else -> {
+                            Log.d("fetchTAG","code: 500 sonrasi")
                             response.errorBody()?.let {
                                 failure()
                             }

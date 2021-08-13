@@ -5,13 +5,15 @@ import java.io.Serializable
 import java.math.BigInteger
 
 data class ProfileModel(
-    // @SerializedName("id") val id: Int, ?????sor?????
-    @SerializedName("first_name") val name: String,
-    @SerializedName("last_name") val lastName: String,
+   /* @SerializedName("id") val id: Int, ?????sor?????
+    @SerializedName("message") val message: String?,
+    @SerializedName("status") val status: Int,*/
+    @SerializedName("first_name") val name: String?,
+    @SerializedName("last_name") val lastName: String?,
     @SerializedName("email") val email: String?,
-    @SerializedName("id_number") var idNumber: BigInteger,
+    @SerializedName("id_number") var idNumber: BigInteger?,
     @SerializedName("user_photo_path") val avatar: String?,
-    @SerializedName("role") val role: Int
+    @SerializedName("role") val role: Int?
     /* @SerializedName("created_at") val createdAt: String,
     @SerializedName("updated_at") val updatedAt: String,
     @SerializedName("authorities") val authorities: List<Authority>? = null,*/

@@ -18,10 +18,8 @@ class ProfileFragment : Fragment() {
     private lateinit var binding: FragmentProfileBinding
 
     private var profileModel: ProfileModel? = null
+    private val viewModel = ProfileViewModel()
 
-    fun setProfileModel(profile: ProfileModel?) {
-        profileModel = profile
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,20 +31,21 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var profile = arguments?.getSerializable("profileData") as ProfileModel?
-        if (profile == null) {
-            profile = profileModel
-        }
-        Log.d("profileTAG", profile?.name.toString())
-        binding.profileData = profile
-        Glide.with(requireActivity()).load(profile?.avatar)
-            .placeholder(R.drawable.image_placeholder)
-            .override(600, 600).into(binding.photoProfile)
+        val token = arguments?.getSerializable("queryToken") as String?
 
-        if (profile?.avatar != null) {
+        Log.d("profileTAG", token.toString())
+        viewModel.getProfile(token) { profileModel ->
+            binding.profileData = profileModel
+
+            Glide.with(requireActivity()).load(profileModel?.avatar)
+                .placeholder(R.drawable.image_placeholder)
+                .override(600, 600).into(binding.photoProfile)
+        }
+
+        if (profileModel?.avatar != null) {
             binding.photoProfile.setOnClickListener {
                 val intent = Intent(requireContext(), ZoomActivity::class.java)
-                intent.putExtra("photoData", profile.avatar)
+                intent.putExtra("photoData", profileModel?.avatar)
                 startActivity(intent)
             }
         }

@@ -38,8 +38,7 @@
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="8dp"
-                android:src="@drawable/sample_qr"
+                android:src="@drawable/image_black"
                 android:visibility="visible" />
         </FrameLayout>
     </androidx.cardview.widget.CardView>
