@@ -1,4 +1,4 @@
-package com.example.qrscanner.ui.admin.scanner
+package com.example.qrscanner.ui.executive.scanner
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -14,7 +14,7 @@ class ScannerQrViewModel : ViewModel() {
         qrResult.postValue("")
     }
 
-    fun getProfile(barcodeToken: String?, completed: (BarcodeResponse?) -> Unit) {
+    fun getBarcodeResponse(barcodeToken: String?, completed: (BarcodeResponse?) -> Unit) {
         val hashMap = HashMap<String, String?>()
         hashMap["token"] = barcodeToken
         ApiClient.instance().fetch(

@@ -1,4 +1,4 @@
-package com.example.qrscanner.ui.admin
+package com.example.qrscanner.ui.executive
 
 import android.app.Dialog
 import android.os.Bundle

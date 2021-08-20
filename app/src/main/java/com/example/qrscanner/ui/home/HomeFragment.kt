@@ -2,17 +2,13 @@ package com.example.qrscanner.ui.home
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.example.qrscanner.R
-import com.example.qrscanner.data.api.models.profile.ProfileModel
 import com.example.qrscanner.databinding.FragmentHomeBinding
-import com.example.qrscanner.ui.admin.AdminActivity
-import com.example.qrscanner.ui.admin.profile.ProfileFragment
+import com.example.qrscanner.ui.executive.AdminActivity
 import com.example.qrscanner.ui.myAccount.MyAccountFragment
 import com.example.qrscanner.ui.user.UserActivity
 

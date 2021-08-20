@@ -28,11 +28,11 @@
             android:name=".ui.home.HomeActivity"
             android:exported="true" />
         <activity
-            android:name=".ui.admin.zoom.ZoomActivity"
+            android:name=".ui.executive.zoom.ZoomActivity"
             android:theme="@style/Theme.ScannerFragment" />
         <activity android:name=".ui.user.UserActivity" />
         <activity
-            android:name=".ui.admin.AdminActivity"
+            android:name=".ui.executive.AdminActivity"
             android:theme="@style/Theme.ScannerFragment" />
         <activity
             android:name=".ui.splash.SplashActivity"

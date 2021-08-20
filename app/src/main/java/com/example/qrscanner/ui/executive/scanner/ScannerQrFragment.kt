@@ -1,4 +1,4 @@
-package com.example.qrscanner.ui.admin.scanner
+package com.example.qrscanner.ui.executive.scanner
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -29,10 +29,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.qrscanner.R
 import com.example.qrscanner.data.api.models.barcodeResponse.BarcodeResponse
-import com.example.qrscanner.data.api.models.profile.ProfileModel
 import com.example.qrscanner.databinding.FragmentScannerBinding
-import com.example.qrscanner.ui.admin.BottomSheetUnvalidFragment
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.mlkit.vision.barcode.Barcode
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
@@ -45,16 +42,14 @@ open class ScannerQrFragment : Fragment() {
     private lateinit var executorService: ExecutorService
     private lateinit var imageAnalysis: ImageAnalysis
     private var _binding: FragmentScannerBinding? = null
-    private var time: Long = 0L
+
     private val binding get() = _binding!!
     private var viewModel: ScannerQrViewModel = ScannerQrViewModel()
     private lateinit var cameraProvider: ProcessCameraProvider
     private var token: String? = null
-    private var bottomSheet = BottomSheetUnvalidFragment()
-    var bottomSheetBehaviour: BottomSheetBehavior<View>? = null
     private var soundVibrateCalled = false
     private var alertDialog: AlertDialog? = null
-
+    private var time: Long = 0L
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -66,8 +61,8 @@ open class ScannerQrFragment : Fragment() {
                 requestPermissions(arrayOf(Manifest.permission.CAMERA), PackageManager.PERMISSION_GRANTED)
             }
         }
-        bottomSheet.onCreateView(inflater, container, savedInstanceState)
         alertDialog = AlertDialog.Builder(requireContext()).create()
+        alertDialog?.cancel()
         val window = alertDialog!!.window
         window?.setGravity(Gravity.BOTTOM)
         return binding.root
@@ -80,10 +75,6 @@ open class ScannerQrFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        bottomSheet.onViewCreated(view, savedInstanceState)
-        bottomSheetBehaviour = BottomSheetBehavior.from(requireActivity().findViewById(R.id.bottomSheetLayout))
-        bottomSheetBehaviour?.state = BottomSheetBehavior.STATE_HIDDEN
-
         time = System.currentTimeMillis()
         runScanner()
     }
@@ -157,8 +148,8 @@ open class ScannerQrFragment : Fragment() {
     }
 
     private fun getProfile(barcode: Barcode) {
-        Log.d("wrongCodeTAG", barcode.displayValue.toString())
-        viewModel.getProfile(barcode.displayValue) { barcode_response ->
+        //Log.d("wrongCodeTAG", barcode.displayValue.toString())
+        viewModel.getBarcodeResponse(barcode.displayValue) { barcode_response ->
             if (barcode_response != null) {
                 if (barcode_response.status == 0) {
                     if (!soundVibrateCalled) {
@@ -167,10 +158,10 @@ open class ScannerQrFragment : Fragment() {
                     }
                     switchToProfileFrag(barcode_response)
                 } else {
-                    invalidBarcodeBottomSheet(barcode_response.status)
+                    AlertDialogInvalidBarcode(barcode_response.status)
                 }
             } else {
-                invalidBarcodeBottomSheet(7)
+                AlertDialogInvalidBarcode(7)
             }
         }
     }
@@ -218,7 +209,7 @@ open class ScannerQrFragment : Fragment() {
     }
 
 
-    private fun invalidBarcodeBottomSheet(status: Int) {
+    private fun AlertDialogInvalidBarcode(status: Int) {
         if (!alertDialog!!.isShowing) {
             alertDialog!!.setTitle("Failed")
             val message = giveDeniedMessage(status)

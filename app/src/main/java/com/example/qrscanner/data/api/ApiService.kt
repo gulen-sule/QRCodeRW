@@ -22,7 +22,7 @@ interface ApiService {
         @Body loginBody: HashMap<String, String>
     ): Observable<Response<LoginResponseModel?>>
 
-    @POST("/api/isPermitted")
+    @POST("/api/userFromQuery")
     fun getProfile(
         @Body tokenMap :HashMap<String, String?>
     ): Observable<Response<ProfileModel?>>

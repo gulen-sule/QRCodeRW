@@ -1,4 +1,4 @@
-package com.example.qrscanner.ui.admin.zoom
+package com.example.qrscanner.ui.executive.zoom
 
 import android.os.Bundle
 import androidx.customview.widget.ViewDragHelper

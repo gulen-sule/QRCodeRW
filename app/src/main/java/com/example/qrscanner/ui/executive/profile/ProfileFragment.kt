@@ -1,4 +1,4 @@
-package com.example.qrscanner.ui.admin.profile
+package com.example.qrscanner.ui.executive.profile
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide
 import com.example.qrscanner.R
 import com.example.qrscanner.data.api.models.profile.ProfileModel
 import com.example.qrscanner.databinding.FragmentProfileBinding
-import com.example.qrscanner.ui.admin.zoom.ZoomActivity
+import com.example.qrscanner.ui.executive.zoom.ZoomActivity
 
 class ProfileFragment : Fragment() {
     private lateinit var binding: FragmentProfileBinding
@@ -32,7 +32,7 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val token = arguments?.getSerializable("queryToken") as String?
-
+        Log.d("query_token", token.toString())
         Log.d("profileTAG", token.toString())
         viewModel.getProfile(token) { profileModel ->
             binding.profileData = profileModel

@@ -6,7 +6,7 @@
     app:startDestination="@id/scannerQrFragment">
     <fragment
         android:id="@+id/scannerQrFragment"
-        android:name="com.example.qrscanner.ui.admin.scanner.ScannerQrFragment"
+        android:name="com.example.qrscanner.ui.executive.scanner.ScannerQrFragment"
         android:label="fragment_scanner"
         tools:layout="@layout/fragment_scanner" >
         <action
@@ -15,7 +15,7 @@
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.qrscanner.ui.admin.profile.ProfileFragment"
+        android:name="com.example.qrscanner.ui.executive.profile.ProfileFragment"
         android:label="ProfileFragment" >
         <action
             android:id="@+id/action_profileFragment_to_photoFragment"
@@ -31,7 +31,7 @@
 
     <fragment
         android:id="@+id/photoFragment"
-        android:name="com.example.qrscanner.ui.admin.photo.PhotoFragment"
+        android:name="com.example.qrscanner.ui.executive.photo.PhotoFragment"
         android:label="PhotoFragment"
         tools:layout="@layout/fragment_photo">
         <action

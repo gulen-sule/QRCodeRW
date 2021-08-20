@@ -1,4 +1,4 @@
-package com.example.qrscanner.ui.admin.profile
+package com.example.qrscanner.ui.executive.profile
 
 import androidx.lifecycle.ViewModel
 import com.example.qrscanner.data.api.ApiClient

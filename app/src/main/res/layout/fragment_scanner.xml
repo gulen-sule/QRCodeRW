@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/scannerqrFragLayout"
     android:theme="@style/Theme.ScannerFragment"
-    tools:context=".ui.admin.scanner.ScannerQrFragment">
+    tools:context=".ui.executive.scanner.ScannerQrFragment">
 
     <androidx.camera.view.PreviewView
         android:id="@+id/cameraView"
