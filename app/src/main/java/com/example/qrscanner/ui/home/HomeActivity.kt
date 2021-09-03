@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import com.example.qrscanner.R
-import com.example.qrscanner.data.api.models.barcodeResponse.BarcodeResponse
 import com.example.qrscanner.databinding.ActivityHomeBinding
 import com.example.qrscanner.ui.executive.profile.ProfileFragment
 import com.example.qrscanner.ui.executive.scanner.ScannerQrViewModel
@@ -58,7 +57,7 @@ class HomeActivity : AppCompatActivity() {
             if (event.metaState == 0 && event.keyCode != KeyEvent.KEYCODE_SHIFT_LEFT)
                 pressedKey = event.unicodeChar.toChar().toString()
         }
-       // Log.d("KeyEventsStringLOG", event.toString())
+        // Log.d("KeyEventsStringLOG", event.toString())
         if (pressedKey != "\n") {
             barcode += pressedKey
         } else {
@@ -106,7 +105,7 @@ class HomeActivity : AppCompatActivity() {
         Log.d("barcodeTAG", barcode)
         viewModel.getBarcodeResponse(qrLiveData) { barcodeResponse ->
             if (barcodeResponse != null)
-                beginTransactionProfile(barcodeResponse)
+                beginTransactionProfile()
             else {
                 binding.progressBarHome.visibility = View.GONE
                 showToastMsg(barcode)
@@ -138,7 +137,7 @@ class HomeActivity : AppCompatActivity() {
 
     private var transaction: FragmentTransaction? = null
     private var profileFragment: ProfileFragment? = null
-    private fun beginTransactionProfile(response: BarcodeResponse?) {
+    private fun beginTransactionProfile() {
         if (profileFragment == null) {
             profileFragment = ProfileFragment()
         }
